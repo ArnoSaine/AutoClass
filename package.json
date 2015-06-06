@@ -1,0 +1,30 @@
+{
+  "name": "autoclass",
+  "version": "0.0.0",
+  "description": "Define argument types for functions and automatically add methods to prototype.",
+  "keywords": [
+    "oop",
+    "prototype"
+  ],
+  "license": "ISC",
+  "author": {
+    "name": "Arno Saine",
+    "email": "arno@mowhi.com"
+  },
+  "main": "lib/AutoClass.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArnoSaine/AutoClass.git"
+  },
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
+  },
+  "dependencies": {
+    "array.prototype.findindex": "^1.0.0",
+    "get-parameter-names": "^0.2.0"
+  },
+  "devDependencies": {
+    "babel": "^5.5.3"
+  }
+}
