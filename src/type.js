@@ -1,22 +1,28 @@
-module.exports = function type(type) {
-	function validateType(type, isVariableLength) {
-		if (!type.prototype) {
+export default function type(type) {
+	function validateType(constructor, isArray, isVariadic) {
+		if (!constructor.prototype) {
 			throw new Error('Type must have prototype.');
 		}
 
-		return {
-			constructor: type,
-			isVariableLength: isVariableLength
-		};
+		return {constructor, isArray, isVariadic};
 	}
 
 	if (Array.isArray(type)) {
 		if (type.length !== 1) {
-			throw new Error('Variable length type specification must have exactly one element in the array.');
+			throw new Error('Array type specification must have exactly one element in the array.');
 		}
 
-		return validateType(type[0], true);
+		type = type[0];
+		if (Array.isArray(type)) {
+			if (type.length !== 1) {
+				throw new Error('Varidic type specification must have exactly one element in the array.');
+			}
+
+			return validateType(type[0], false, true);
+		}
+
+		return validateType(type, true, false);
 	}
 
-	return validateType(type, false);
-};
+	return validateType(type, false, false);
+}

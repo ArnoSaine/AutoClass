@@ -1,57 +1,66 @@
-import 'array.prototype.findindex';
-import Subject from './Subject';
+import createSubject from './createSubject';
 import type from './type';
 
 function AutoClass(/*name[, args], f*/) {
-	var args = Array.prototype.slice.call(arguments);
-	var f = args.pop();
-	var name = args.shift();
+	const args = Array.prototype.slice.call(arguments);
+	const f = args.pop();
+	const name = args.shift();
 
 	return autoClass(name, args.map(type), f);
 }
 
 function autoClass(name, paramTypes, f) {
-	var variableLengthArgumentIndex = paramTypes.findIndex(function (paramType) {
-		return paramType.isVariableLength;
-	});
+	const variadicIndex = paramTypes.reduce(function (variadicIndex, paramType, i) {
+		if (paramType.isVariadic) {
+			if (variadicIndex !== -1) {
+				throw new Error('Only one variadic type is allowed.');
+			}
+			return i;
+		}
+		return variadicIndex;
+	}, -1);
 
-	var hasVariableLengthArgument = variableLengthArgumentIndex !== -1;
+	const isVariadic = variadicIndex !== -1;
 
-	var subject = Subject(paramTypes, f, hasVariableLengthArgument, variableLengthArgumentIndex);
+	const subject = createSubject(paramTypes, f, isVariadic, variadicIndex);
 	
-	paramTypes.forEach(function (paramType, i) {
-		if (i === variableLengthArgumentIndex) {
-			return;
-		}
-		var proto = paramType.constructor.prototype;
-		if (!proto[name]) {
-			proto[name] = function method() {
-				var args = Array.prototype.slice.call(arguments);
-				if (i < variableLengthArgumentIndex || !hasVariableLengthArgument) {
-					args.splice(i, 0, this);
-				} else {
-					if (i > variableLengthArgumentIndex) {
-						var iRight = paramTypes.length - i;
-						args.splice(args.length - iRight, 0, this);
+	if (name) {
+		// add methods
+		paramTypes.forEach(function (paramType, i) {
+			// don't create methods for array or variadic type
+			if (paramType.isArray || paramType.isVariadic) {
+				return;
+			}
+			const proto = paramType.constructor.prototype;
+			if (proto && !proto[name]) {
+				proto[name] = function method() {
+					let args = Array.prototype.slice.call(arguments);
+					if (i < variadicIndex || !isVariadic) {
+						args.splice(i, 0, this);
+					} else {
+						if (i > variadicIndex) {
+							args.splice(args.length - paramTypes.length + i, 0, this);
+						}
 					}
-				}
-				return subject.apply(undefined, args);
-			};
-		}
-	});
+					return subject.apply(undefined, args);
+				};
+			}
+		});
+	}
 
 	return subject;
 }
 
-export default AutoClass;
+const Text = AutoClass('', String, function (text) {
+	return typeof text === 'string' ? text : '';
+});
 
-var Name = require('./Name');
-var Type = AutoClass('Type', Object, type);
+const Type = AutoClass('Type', Object, type);
 
 export default AutoClass(
 	'AutoClass',
-	Name,
-	[Type],
+	Text,
+	[[Type]],
 	Function, 
 	autoClass
 );
