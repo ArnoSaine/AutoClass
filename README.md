@@ -2,7 +2,17 @@
 
 Define argument types for functions and automatically add methods to prototype.
 
+## Installation
+
+```
+npm install autoclass
+```
+
+## Example
+
 ```js
+var AutoClass = require('autoclass');
+
 var Rider = AutoClass(
     'Rider',
     String,
