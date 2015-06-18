@@ -1,15 +1,15 @@
 import createSubject from './createSubject';
 import type from './type';
 
-function AutoClass(/*name[, args], f*/) {
+function AutoClass() {
 	const args = Array.prototype.slice.call(arguments);
-	const f = args.pop();
+	const func = args.pop();
 	const name = args.shift();
 
-	return autoClass(name, args.map(type), f);
+	return autoClass(name, args.map(type), func);
 }
 
-function autoClass(name, paramTypes, f) {
+function autoClass(name, paramTypes, func) {
 	const variadicIndex = paramTypes.reduce(function (variadicIndex, paramType, i) {
 		if (paramType.isVariadic) {
 			if (variadicIndex !== -1) {
@@ -22,7 +22,7 @@ function autoClass(name, paramTypes, f) {
 
 	const isVariadic = variadicIndex !== -1;
 
-	const subject = createSubject(paramTypes, f, isVariadic, variadicIndex);
+	const subject = createSubject(paramTypes, func, isVariadic, variadicIndex);
 	
 	if (name) {
 		// add methods
