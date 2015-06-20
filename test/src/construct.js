@@ -1,4 +1,4 @@
-import AutoClass from './../../../AutoClass';
+import AutoClass from '../../';
 import assert from 'assert';
 
 const ref = {};

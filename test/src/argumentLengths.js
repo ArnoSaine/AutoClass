@@ -1,4 +1,4 @@
-import AutoClass from './../../../AutoClass';
+import AutoClass from '../../';
 import assert from 'assert';
 
 let Zero = AutoClass('', function () {}).valueOf();
