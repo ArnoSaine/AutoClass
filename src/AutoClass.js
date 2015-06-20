@@ -55,7 +55,7 @@ const Text = AutoClass('', String, function (text) {
 	return typeof text === 'string' ? text : '';
 });
 
-const Type = AutoClass('Type', Object, type);
+const Type = AutoClass('', Object, type);
 
 export default AutoClass(
 	'AutoClass',

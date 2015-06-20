@@ -156,8 +156,11 @@ var BikeNumber = AutoClass(
     'BikeNumber',
     Number,
     function (number) {
-        if (isNaN(number) || number < 1) {
-            throw new Error('Bike number must be positive integer.');
+        if (isNaN(number)) {
+            throw new Error('Bike number must be positive integer, got NaN.');
+        }
+        if (number < 1) {
+            throw new Error(`Bike number must be positive integer, got ${number}.`);
         }
         return Math.floor(number);
     }
@@ -169,6 +172,18 @@ var Rider = AutoClass(
     BikeNumber,
     function (nickname, bikeNumber) {/*...*/}
 );
+
+try {
+    Rider.valueOf()('The Ice Man', -36); // Throws: "Error: Bike number must be positive integer, got -36."
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    Rider.valueOf()('The Doctor', 'VR46'); // Throws: "Error: Bike number must be positive integer, got NaN."
+} catch (e) {
+    console.log(e);
+}
 ```
 
 ## License
