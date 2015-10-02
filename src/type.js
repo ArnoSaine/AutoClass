@@ -1,12 +1,6 @@
-export default function type(type) {
-	function validateType(constructor, isArray, isVariadic) {
-		if (!constructor.prototype) {
-			throw new Error('Type must have prototype.');
-		}
+import {validateType} from './';
 
-		return {constructor, isArray, isVariadic};
-	}
-
+export function type(type) {
 	if (Array.isArray(type)) {
 		if (type.length !== 1) {
 			throw new Error('Array type specification must have exactly one element in the array.');

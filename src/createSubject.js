@@ -1,9 +1,11 @@
 import getParameterNames from 'get-parameter-names';
-import isPlainObject from 'is-plain-object';
-import {arrayToObject, map, mutateArray} from './utils';
-
-const toObject = ({constructor}) => value => value instanceof constructor ? value : constructor(value);
-const valueOf = any => any === null || typeof any === 'undefined' ? any : any.valueOf();
+import {
+	arrayToObject,
+	createObject,
+	argumentsToInstances,
+	instancesToValues,
+	formatArguments
+} from './';
 
 function validateArgumentsLength(isVariadic, parameterTypesLength) {
 	if (isVariadic) {
@@ -35,55 +37,7 @@ function validateArgumentsLength(isVariadic, parameterTypesLength) {
 	}
 }
 
-const argumentToInstance = parameterType => {
-	const construct = toObject(parameterType);
-	if (parameterType.isVariadic || parameterType.isArray) {
-		return (constructEach => arg => {
-			if (!Array.isArray(arg)) {
-				throw new TypeError('Expected array.');
-			}
-			return constructEach(arg);
-		})(mutateArray(construct));
-	} else {
-		return construct;
-	}
-};
-
-const instanceToValue = parameterType => parameterType.isVariadic || parameterType.isArray ? arg => arg.map(valueOf) : valueOf;
-const argumentsToInstances = map(argumentToInstance);
-const instancesToValues = map(instanceToValue);
-
-const formatArguments = (isVariadic, variadicIndex, parameterNames, parameterTypesLength) => {
-	const singleArgument = (() => {
-		if ((isVariadic ? 2 : 1) < parameterTypesLength) {
-			return arg => {
-				if (!isPlainObject(arg)) {
-					throw new Error('Expected plain object for AutoClass instance.');
-				}
-				return parameterNames.map(name => arg[name]);
-			};
-		} else {
-			return isVariadic ? arg => [[arg]] : arg => [arg];
-		}
-	})();
-	const multipleArguments = isVariadic ?
-		args => {
-			args = Array.prototype.slice.call(args);
-			args.splice(variadicIndex, 0, args.splice(variadicIndex, args.length - parameterTypesLength + 1));
-			return args;
-		} :
-		args => Array.prototype.slice.call(args);
-	
-	return args => {
-		switch (args.length) {
-			case 0: return [];
-			case 1: return singleArgument(args[0]);
-			default: return multipleArguments(args);
-		}
-	};
-}
-
-export default function (parameterTypes, func, isVariadic, variadicIndex) {
+export function createSubject(parameterTypes, func, isVariadic, variadicIndex, makeAutoClass) {
 	const parameterNames = getParameterNames(func);
 
 	if (func.length !== parameterNames.length) {
@@ -107,21 +61,13 @@ export default function (parameterTypes, func, isVariadic, variadicIndex) {
 	const createContext = arrayToObject(parameterNames);
 	const toValues = instancesToValues(parameterTypes);
 
-	return function subject() {
-
-		if (!isValidArgumentsLength(arguments.length)) {
-			throw new Error(argumentsLengthError(arguments.length));
+	return function subject(...args) {
+		if (!isValidArgumentsLength(args.length)) {
+			throw new Error(argumentsLengthError(args.length));
 		}
 
-		const args = toInstances(format(arguments));
-		let value = func.apply(createContext(args), toValues(args));
+		args = toInstances(format(args));
 
-		return Object.create(subject.prototype, {
-			valueOf: {
-				value() {
-					return value;
-				}
-			}
-		});
+		return createObject(subject, func.apply(createContext(args), toValues(args)));
 	};
-};
+}

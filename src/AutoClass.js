@@ -1,13 +1,8 @@
-import createSubject from './createSubject';
-import type from './type';
-
-function AutoClass() {
-	const args = Array.prototype.slice.call(arguments);
-	const func = args.pop();
-	const name = args.shift();
-
-	return autoClass(name, args.map(type), func);
-}
+import {
+	createSubject,
+	text,
+	type
+} from './';
 
 function autoClass(name, paramTypes, func) {
 	const variadicIndex = paramTypes.reduce(function (variadicIndex, paramType, i) {
@@ -23,18 +18,17 @@ function autoClass(name, paramTypes, func) {
 	const isVariadic = variadicIndex !== -1;
 
 	const subject = createSubject(paramTypes, func, isVariadic, variadicIndex);
-	
+
 	if (name) {
 		// add methods
-		paramTypes.forEach(function (paramType, i) {
+		paramTypes.forEach(function ({isArray, isVariadic, constructor}, i) {
 			// don't create methods for array or variadic type
-			if (paramType.isArray || paramType.isVariadic) {
+			if (isArray || isVariadic) {
 				return;
 			}
-			const proto = paramType.constructor.prototype;
+			const proto = constructor.prototype;
 			if (proto && !proto[name]) {
-				proto[name] = function method() {
-					let args = Array.prototype.slice.call(arguments);
+				proto[name] = function method(...args) {
 					if (i < variadicIndex || !isVariadic) {
 						args.splice(i, 0, this);
 					} else {
@@ -42,7 +36,7 @@ function autoClass(name, paramTypes, func) {
 							args.splice(args.length - paramTypes.length + i, 0, this);
 						}
 					}
-					return subject.apply(undefined, args);
+					return subject(...args);
 				};
 			}
 		});
@@ -51,16 +45,15 @@ function autoClass(name, paramTypes, func) {
 	return subject;
 }
 
-const Text = AutoClass('', String, function (text) {
-	return typeof text === 'string' ? text : '';
-});
+const AutoClass = autoClass('', [text, [[type]], Function].map(type), autoClass);
 
+const Text = AutoClass('', String, text);
 const Type = AutoClass('', Object, type);
 
 export default AutoClass(
 	'AutoClass',
 	Text,
 	[[Type]],
-	Function, 
+	Function,
 	autoClass
 );

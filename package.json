@@ -1,6 +1,6 @@
 {
   "name": "autoclass",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Define argument types for functions and automatically add methods to prototype.",
   "keywords": [
     "oop",

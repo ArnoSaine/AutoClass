@@ -30,8 +30,8 @@ var ShowInfo = AutoClass(
     }
 );
 
-var dovizioso = Rider.valueOf()('Dovi', 4);
-var iannone = Rider.valueOf()('The Maniac', 29);
+var dovizioso = Rider('Dovi', 4);
+var iannone = Rider('The Maniac', 29);
 
 dovizioso.ShowInfo(); // Logs "Dovi, #4"
 iannone.ShowInfo(); // Logs "The Maniac, #29"
@@ -78,7 +78,7 @@ var MyClass = AutoClass(
     function (someText, obj, nums, texts, bool) {
         console.log('MyClass');
     }
-).valueOf();
+);
 
 MyClass('text', null, [1, 2, 3], 'a', 'b', 'c', true); // Logs: "MyClass"
 ```
@@ -98,14 +98,14 @@ var Rider = AutoClass(
     }
 );
 
-var dovizioso = Rider.valueOf()('Dovi', '04');
+var dovizioso = Rider('Dovi', '04');
 ```
 
 If class requires at least two types (variadic type is not considered), constructing from object literal is possible.
 
 ```js
 // `ShowInfo` requires `Rider`
-ShowInfo.valueOf()({
+ShowInfo({
     nickname: 'PoleMan',
     number: 51
 }); // Logs: "PoleMan, #51"
@@ -116,18 +116,19 @@ ShowInfo.valueOf()({
 Function arguments are **values**. Use `this.argumentName` to access **instance**.
 
 ```js
-var ClassA = AutoClass('ClassA', Number, function (number) {return number;});
+var MyClass = AutoClass('MyClass', Number, function (number) {return number;});
 
-var ClassB = AutoClass(
-    'ClassB',
-    ClassA,
-    function (a) {
+var TestType = AutoClass(
+    'TestType',
+    MyClass,
+    AutoClass,
+    function (a, type) {
         console.log(a);
-        console.log(this.a instanceof ClassA.valueOf());
+        console.log(this.a instanceof type);
     }
 );
 
-ClassB.valueOf()(123); // Logs: 123; true
+TestType(123, MyClass); // Logs: 123; true
 ```
 
 Function and method calls return **instance**. Use `.valueOf()` to access return **value**.
@@ -141,10 +142,9 @@ var MyClass = AutoClass(
     }
 );
 
-var MyClassFunc = MyClass.valueOf();
 var ref = {};
 
-console.log(MyClassFunc(ref).valueOf() === ref); // Logs: true
+console.log(MyClass(ref).valueOf() === ref); // Logs: true
 ```
 
 ### Create classes
@@ -174,13 +174,13 @@ var Rider = AutoClass(
 );
 
 try {
-    Rider.valueOf()('The Ice Man', -36); // Throws: "Error: Bike number must be positive integer, got -36."
+    Rider('The Ice Man', -36); // Throws: "Error: Bike number must be positive integer, got -36."
 } catch (e) {
     console.log(e);
 }
 
 try {
-    Rider.valueOf()('The Doctor', 'VR46'); // Throws: "Error: Bike number must be positive integer, got NaN."
+    Rider('The Doctor', 'VR46'); // Throws: "Error: Bike number must be positive integer, got NaN."
 } catch (e) {
     console.log(e);
 }
