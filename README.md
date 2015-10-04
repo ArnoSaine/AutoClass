@@ -33,8 +33,8 @@ var ShowInfo = AutoClass(
 var dovizioso = Rider('Dovi', 4);
 var iannone = Rider('The Maniac', 29);
 
-dovizioso.ShowInfo(); // Logs "Dovi, #4"
-iannone.ShowInfo(); // Logs "The Maniac, #29"
+dovizioso.ShowInfo(); // Logs: "Dovi, #4"
+iannone.ShowInfo(); // Logs: "The Maniac, #29"
 ```
 
 ### AutoClass(name[, ...type], func)
@@ -93,7 +93,7 @@ var Rider = AutoClass(
     String,
     Number,
     function (nickname, number) {
-        console.log(typeof number); // Logs "number"
+        console.log(typeof number); // Logs: "number"
         return {nickname, number};
     }
 );

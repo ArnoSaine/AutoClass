@@ -22,7 +22,7 @@ function autoClass(name, paramTypes, func) {
 	if (name) {
 		// add methods
 		paramTypes.forEach(function ({isArray, isVariadic, constructor}, i) {
-			// don't create methods for array or variadic type
+			// don't create methods to array or variadic types
 			if (isArray || isVariadic) {
 				return;
 			}

@@ -41,4 +41,4 @@ assert(examples.indexOf(requireAutoClass) > -1, 'requires AutoClass');
 
 eval(examples.replace(requireAutoClass, "require('../../')"));
 
-assert.strictEqual(expectLoggings.length, 0, 'example loggings');
+assert.strictEqual(expectLoggings.length, 0, 'got all example loggings');
