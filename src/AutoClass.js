@@ -15,9 +15,9 @@ function autoClass(name, paramTypes, func) {
 		return variadicIndex;
 	}, -1);
 
-	const isVariadic = variadicIndex !== -1;
+	const isVariadicSubject = variadicIndex !== -1;
 
-	const subject = createSubject(paramTypes, func, isVariadic, variadicIndex);
+	const subject = createSubject(paramTypes, func, isVariadicSubject, variadicIndex);
 
 	if (name) {
 		// add methods
@@ -29,12 +29,15 @@ function autoClass(name, paramTypes, func) {
 			const proto = constructor.prototype;
 			if (proto && !proto[name]) {
 				proto[name] = function method(...args) {
-					if (i < variadicIndex || !isVariadic) {
+					if (i < variadicIndex || !isVariadicSubject) {
 						args.splice(i, 0, this);
 					} else {
 						if (i > variadicIndex) {
-							args.splice(args.length - paramTypes.length + i, 0, this);
-						}
+							args.splice(args.length - paramTypes.length + i + 1, 0, this);
+						}/* else {
+							// i === variadicIndex
+							throw new Error(´There should be no methods created of parameter ${i}.´);
+						}*/
 					}
 					return subject(...args);
 				};

@@ -11,7 +11,13 @@ export const formatArguments = (isVariadic, variadicIndex, parameterNames, param
 				return parameterNames.map(name => arg[name]);
 			};
 		} else {
-			return isVariadic ? arg => [[arg]] : arg => [arg];
+			return isVariadic
+				? parameterTypesLength === 1
+					? arg => [[arg]]
+					: variadicIndex === 0
+						? arg => [[], arg]
+						: arg => [arg, []]
+				: arg => [arg];
 		}
 	})();
 	const multipleArguments = isVariadic ?
