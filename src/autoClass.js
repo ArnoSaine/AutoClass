@@ -1,10 +1,6 @@
-import {
-	createSubject,
-	text,
-	type
-} from './';
+import {createSubject} from './';
 
-function autoClass(name, paramTypes, func) {
+export function autoClass(name, paramTypes, func) {
 	const variadicIndex = paramTypes.reduce(function (variadicIndex, paramType, i) {
 		if (paramType.isVariadic) {
 			if (variadicIndex !== -1) {
@@ -47,16 +43,3 @@ function autoClass(name, paramTypes, func) {
 
 	return subject;
 }
-
-const AutoClass = autoClass('', [text, [[type]], Function].map(type), autoClass);
-
-const Text = AutoClass('', String, text);
-const Type = AutoClass('', Object, type);
-
-export default AutoClass(
-	'AutoClass',
-	Text,
-	[[Type]],
-	Function,
-	autoClass
-);

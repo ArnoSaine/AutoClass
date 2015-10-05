@@ -11,7 +11,7 @@
     "name": "Arno Saine",
     "email": "arno@mowhi.com"
   },
-  "main": "lib/AutoClass.js",
+  "main": "lib/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/ArnoSaine/AutoClass.git"

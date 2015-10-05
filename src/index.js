@@ -23,6 +23,7 @@ export const mutateArray = fn => array => {
 	return array;
 };
 
+export * from './autoClass';
 export * from './createObject';
 export * from './createSubject';
 export * from './formatArguments';
