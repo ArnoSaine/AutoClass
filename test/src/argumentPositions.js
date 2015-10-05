@@ -8,8 +8,6 @@ const TestClass = AutoClass('', function () {
 	return ref;
 });
 
-const testInstance = TestClass();
-
 const Only = AutoClass('Only', TestClass, function (x) {
 	assertCount++;
 	assert.strictEqual(x, ref, 'only');
@@ -40,6 +38,19 @@ const VariadicAfter = AutoClass('VariadicAfter', TestClass, [[Number]], function
 	assert.strictEqual(x, ref, 'variadic after');
 });
 
+const testInstance = TestClass();
+
+Only(testInstance);
+First(testInstance, 0);
+Middle(0, testInstance, 0);
+Last(0, testInstance);
+VariadicBefore(testInstance);
+VariadicBefore(0, testInstance);
+VariadicBefore(0, 0, testInstance);
+VariadicAfter(testInstance);
+VariadicAfter(testInstance, 0);
+VariadicAfter(testInstance, 0, 0);
+
 testInstance.Only();
 testInstance.First(0);
 testInstance.Middle(0, 0);
@@ -51,4 +62,4 @@ testInstance.VariadicAfter();
 testInstance.VariadicAfter(0);
 testInstance.VariadicAfter(0, 0);
 
-assert.strictEqual(assertCount, 10, 'assert count');
+assert.strictEqual(assertCount, 20, 'assert count');
