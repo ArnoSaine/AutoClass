@@ -7,12 +7,14 @@ export function createObject(subject, value) {
 			return value;
 		}
 	};
-	return typeof value === 'function'
-		? Object.defineProperties(Object.setPrototypeOf(apply(value), subject.prototype), {
+	switch (typeof value) {
+		case 'function': return Object.defineProperties(Object.setPrototypeOf(apply(value), subject.prototype), {
 			valueOf,
 			prototype: {
 				value: value.prototype
 			}
-		})
-		: Object.create(subject.prototype, {valueOf});
+		});
+		case 'undefined': return;
+		default: return Object.create(subject.prototype, {valueOf});
+	}
 }

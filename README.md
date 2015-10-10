@@ -188,6 +188,34 @@ try {
 }
 ```
 
+### Method chaining
+
+Functions that return nothing or undefined can be chained.
+
+```js
+AutoClass(
+    'SetNumber',
+    Rider,
+    BikeNumber,
+    function (rider, bikeNumber) {
+        rider.bikeNumber = bikeNumber;
+    }
+);
+
+AutoClass(
+    'ShowInfo',
+    Rider,
+    function ({nickname, bikeNumber}) {
+        console.log(`${nickname}, #${bikeNumber}`);
+    }
+);
+
+Rider('Stoner', 27)
+    .ShowInfo() // Logs: "Stoner, #27"
+    .SetNumber(1)
+    .ShowInfo(); // Logs: "Stoner, #1"
+```
+
 ## License
 
 ISC

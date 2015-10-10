@@ -35,7 +35,8 @@ export function autoClass(name, paramTypes, func) {
 							throw new Error(´There should be no methods created of parameter ${i}.´);
 						}*/
 					}
-					return subject(...args);
+					const value = subject(...args);
+					return typeof value === 'undefined' ? this : value;
 				};
 			}
 		});
