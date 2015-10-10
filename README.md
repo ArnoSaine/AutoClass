@@ -11,9 +11,9 @@ npm install autoclass
 ## Example
 
 ```js
-var AutoClass = require('autoclass');
+import AutoClass from 'autoclass';
 
-var Rider = AutoClass(
+const Rider = AutoClass(
     'Rider',
     String,
     Number,
@@ -22,16 +22,16 @@ var Rider = AutoClass(
     }
 );
 
-var ShowInfo = AutoClass(
+const ShowInfo = AutoClass(
     'ShowInfo',
     Rider,
     function (rider) {
-        console.log(rider.nickname + ', #' + rider.number);
+        console.log(`${rider.nickname}, #${rider.number}`);
     }
 );
 
-var dovizioso = Rider('Dovi', 4);
-var iannone = Rider('The Maniac', 29);
+const dovizioso = Rider('Dovi', 4);
+const iannone = Rider('The Maniac', 29);
 
 dovizioso.ShowInfo(); // Logs: "Dovi, #4"
 iannone.ShowInfo(); // Logs: "The Maniac, #29"
@@ -54,7 +54,7 @@ Function to execute, when [instance](#values-and-instances) as function or insta
 ##### Returns: [Instance](#values-and-instances)
 
 ```js
-var MyClass = AutoClass(
+const MyClass = AutoClass(
     'MyClass',
     String,
     function (text) {
@@ -68,7 +68,7 @@ var MyClass = AutoClass(
 Three kinds of types can be declared - basic, array, and variadic.
 
 ```js
-var MyClass = AutoClass(
+const MyClass = AutoClass(
     'MyClass',
     String, // Basic types. Validated using `instanceof` operator.
     Object,
@@ -88,7 +88,7 @@ MyClass('text', null, [1, 2, 3], 'a', 'b', 'c', true); // Logs: "MyClass"
 If `instanceof` test fails, instance is passed to constructor.
 
 ```js
-var Rider = AutoClass(
+const Rider = AutoClass(
     'Rider',
     String,
     Number,
@@ -98,7 +98,7 @@ var Rider = AutoClass(
     }
 );
 
-var dovizioso = Rider('Dovi', '04');
+const dovizioso = Rider('Dovi', '04');
 ```
 
 If class requires at least two types (variadic type is not considered), constructing from object literal is possible.
@@ -116,9 +116,9 @@ ShowInfo({
 Function arguments are **values**. Use `this.argumentName` to access **instance**.
 
 ```js
-var MyClass = AutoClass('MyClass', Number, function (number) {return number;});
+const MyClass = AutoClass('MyClass', Number, function (number) {return number;});
 
-var TestType = AutoClass(
+const TestType = AutoClass(
     'TestType',
     MyClass,
     AutoClass,
@@ -134,7 +134,7 @@ TestType(123, MyClass); // Logs: 123; true
 Function and method calls return **instance**. Use `.valueOf()` to access return **value**.
 
 ```js
-var MyClass = AutoClass(
+const MyClass = AutoClass(
     'MyClass',
     Object,
     function (obj) {
@@ -142,7 +142,7 @@ var MyClass = AutoClass(
     }
 );
 
-var ref = {};
+const ref = {};
 
 console.log(MyClass(ref).valueOf() === ref); // Logs: true
 ```
@@ -152,7 +152,7 @@ console.log(MyClass(ref).valueOf() === ref); // Logs: true
 Validate inputs, return value.
 
 ```js
-var BikeNumber = AutoClass(
+const BikeNumber = AutoClass(
     'BikeNumber',
     Number,
     function (number) {
@@ -166,15 +166,17 @@ var BikeNumber = AutoClass(
     }
 );
 
-var Rider = AutoClass(
+const Rider = AutoClass(
     'Rider',
     String,
     BikeNumber,
-    function (nickname, bikeNumber) {/*...*/}
+    function (nickname, bikeNumber) {
+        return {nickname, bikeNumber};
+    }
 );
 
 try {
-    Rider('The Ice Man', -36); // Throws: "Error: Bike number must be positive integer, got -36."
+    Rider('Kallio', -36); // Throws: "Error: Bike number must be positive integer, got -36."
 } catch (e) {
     console.log(e);
 }

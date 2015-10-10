@@ -39,6 +39,6 @@ const requireAutoClass = "require('autoclass');";
 
 assert(examples.indexOf(requireAutoClass) > -1, 'requires AutoClass');
 
-eval(examples.replace(requireAutoClass, "require('../../')"));
+eval(examples.replace(requireAutoClass, "require('../../');var AutoClass = require('../../');"));
 
 assert.strictEqual(expectLoggings.length, 0, 'got all example loggings');
