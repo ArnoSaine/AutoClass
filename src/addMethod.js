@@ -22,25 +22,22 @@ export const addMethod = (name, variadicIndex, isVariadicSubject, subject, {leng
 
 function add(methodName, methods) {
 	const secondaryMethods = {};
-	const myMethod = Symbol(`Method to ${methodName}`);
+	let primaryMethod;
 
 	// parameterType =>
 	return ({constructor:{prototype}, index, name}) => {
 		if (prototype) {
 			if (prototype.hasOwnProperty(methodName)) {
-				const method = prototype[methodName];
-				if (method.hasOwnProperty(myMethod)) {
+				if (prototype[methodName] === primaryMethod) {
 					secondaryMethods[name] = methods(index);
 				}
 			} else {
-				const method = methods(index);
+				const createMethod = methods(index);
 				Object.defineProperty(prototype, methodName, {
 					get() {
-						return Object.defineProperties(method(this), mapObj(secondaryMethods, method => ({
-							get: () => method(this)
-						}), {
-							[myMethod]: {}
-						}));
+						return primaryMethod = Object.defineProperties(createMethod(this), mapObj(secondaryMethods, createMethod => ({
+							get: () => createMethod(this)
+						})));
 					}
 				});
 			}
