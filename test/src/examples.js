@@ -14,7 +14,9 @@ const expectLoggings = [
 	'Error: Bike number must be positive integer, got -36.',
 	'Error: Bike number must be positive integer, got NaN.',
 	'Stoner, #27',
-	'Stoner, #1'
+	'Stoner, #1',
+	'Hello world!',
+	' world!Hello'
 ];
 
 const console = {

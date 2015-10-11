@@ -3,6 +3,12 @@ import assert from 'assert';
 
 AutoClass('Subtract', Number, Number, (minuend, subtrahend) => minuend - subtrahend);
 
-var subtractFrom7 = (7).Subtract;
+const subtract = (7).Subtract;
 
-assert.strictEqual(subtractFrom7(3).valueOf(), 4, 'auto bind');
+// 7 - 3
+assert.strictEqual(subtract(3).valueOf(), 4, 'auto bind');
+
+const subtractSubtrahend = subtract.subtrahend;
+
+// 4 - 7
+assert.strictEqual(subtractSubtrahend(4).valueOf(), -3, 'secondary method');

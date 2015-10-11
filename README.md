@@ -216,6 +216,26 @@ Rider('Stoner', 27)
     .ShowInfo(); // Logs: "Stoner, #1"
 ```
 
+### Multiple methods from same type
+
+Function may require same type multiple times. Primary method uses instance as first argument of its type. To use instance as another argument of its type, use `instance.Method.argumentName(...other args)`.
+
+```js
+AutoClass(
+    'Append',
+    String,
+    String,
+    function (to, text) {
+        return to + text;
+    }
+);
+
+// "Hello" as `to` argument
+console.log('Hello'.Append(' world!').valueOf()); // Logs: "Hello world!"
+// "Hello" as `text` argument
+console.log('Hello'.Append.text(' world!').valueOf()); // Logs: " world!Hello"
+```
+
 ## License
 
 ISC

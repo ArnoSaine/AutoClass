@@ -23,6 +23,7 @@ export const mutateArray = fn => array => {
 	return array;
 };
 
+export * from './addMethod';
 export * from './autoClass';
 export * from './createObject';
 export * from './createSubject';
@@ -41,6 +42,13 @@ export const arrayToObject = keys => array => keys.reduce((object, key, i) => {
 	return object;
 }, {});
 export const instancesToValues = map(instanceToValue);
+// array or variadic types don't get methods
+// parameterType => boolean.
+export const isMethodType = ({isArray, isVariadic}) => !isArray && !isVariadic;
+export const mapObj = (object, func, initialValue, context) => Object.keys(object).reduce((curry, propName, index) => {
+	curry[propName] = func.call(context, object[propName], propName, index, object);
+	return curry;
+}, initialValue);
 export const text = text => typeof text === 'string' ? text : '';
 export const toObject = ({constructor}) => value => value instanceof constructor ? value : constructor(value);
 export function validateType(constructor, isArray, isVariadic) {
