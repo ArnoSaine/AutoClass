@@ -24,6 +24,7 @@ export const mutateArray = fn => array => {
 };
 
 export * from './addMethod';
+export * from './assignParameterNamesAndIndexes';
 export * from './autoClass';
 export * from './createObject';
 export * from './createSubject';
@@ -58,3 +59,12 @@ export function validateType(constructor, isArray, isVariadic) {
 	return {constructor, isArray, isVariadic};
 }
 export const valueOf = any => any === null || typeof any === 'undefined' ? any : any.valueOf();
+export const variadicParameterIndex = paramTypes => paramTypes.reduce(function (variadicIndex, {isVariadic}, i) {
+	if (isVariadic) {
+		if (variadicIndex !== -1) {
+			throw new Error('Only one variadic type is allowed.');
+		}
+		return i;
+	}
+	return variadicIndex;
+}, -1);

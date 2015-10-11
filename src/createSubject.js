@@ -1,6 +1,6 @@
-import getParameterNames from 'get-parameter-names';
 import {
 	arrayToObject,
+	assignParameterNamesAndIndexes,
 	createObject,
 	argumentsToInstances,
 	instancesToValues,
@@ -38,19 +38,7 @@ function validateArgumentsLength(isVariadic, parameterTypesLength) {
 }
 
 export function createSubject(parameterTypes, func, isVariadic, variadicIndex, makeAutoClass) {
-	const parameterNames = getParameterNames(func);
-
-	if (func.length !== parameterNames.length) {
-		throw new Error(`func.length (${func.length}) and parameterNames.length (${parameterNames.length}) should be equal.`);
-	}
-
-	if (parameterTypes.length < parameterNames.length) {
-		throw new Error(`Missing parameter definitions. Got ${parameterTypes.length}, expecting ${parameterNames.length}.`);
-	}
-
-	if (parameterTypes.length > parameterNames.length) {
-		throw new Error(`Missing parameter names. Got ${parameterNames.length}, expecting ${parameterTypes.length}.`);
-	}
+	const parameterNames = assignParameterNamesAndIndexes(parameterTypes, func);
 
 	const {
 		test: isValidArgumentsLength,
