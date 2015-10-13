@@ -4,7 +4,8 @@ import {
 	createObject,
 	argumentsToInstances,
 	instancesToValues,
-	formatArguments
+	formatArguments,
+	constructorCallCheck
 } from './';
 
 function validateArgumentsLength(isVariadic, parameterTypesLength) {
@@ -37,7 +38,7 @@ function validateArgumentsLength(isVariadic, parameterTypesLength) {
 	}
 }
 
-export function createSubject(parameterTypes, func, isVariadic, variadicIndex, makeAutoClass) {
+export function createSubject(name, parameterTypes, func, isVariadic, variadicIndex, makeAutoClass) {
 	const parameterNames = assignParameterNamesAndIndexes(parameterTypes, func);
 
 	const {
@@ -50,6 +51,8 @@ export function createSubject(parameterTypes, func, isVariadic, variadicIndex, m
 	const toValues = instancesToValues(parameterTypes);
 
 	return function subject(...args) {
+		constructorCallCheck(name, this, subject);
+
 		if (!isValidArgumentsLength(args.length)) {
 			throw new Error(argumentsLengthError(args.length));
 		}

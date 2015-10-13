@@ -1,4 +1,7 @@
-import {mapObj} from './';
+import {
+	mapObj,
+	constructorCallCheck
+} from './';
 
 export const addMethod = (name, variadicIndex, isVariadicSubject, subject, {length}) => add(name, index => {
 	/*if (index === variadicIndex) {
@@ -11,7 +14,9 @@ export const addMethod = (name, variadicIndex, isVariadicSubject, subject, {leng
 		
 	return instance => {
 		const splice = integrate(instance);
-		return (...args) => {
+		return function method(...args) {
+			constructorCallCheck(name, this, method);
+			
 			splice(args);
 			const value = subject(...args);
 			// if value is undefined, return `instance` for chaining

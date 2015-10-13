@@ -42,6 +42,11 @@ export const arrayToObject = keys => array => keys.reduce((object, key, i) => {
 	object[key] = array[i];
 	return object;
 }, {});
+export const constructorCallCheck = (name, instance, func) => {
+	if (instance && instance.constructor === func) {
+		throw new TypeError(`${name} is not a constructor`);
+	}
+};
 export const instancesToValues = map(instanceToValue);
 // array or variadic types don't get methods
 // parameterType => boolean.
