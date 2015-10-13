@@ -59,6 +59,6 @@ export function createSubject(name, parameterTypes, func, isVariadic, variadicIn
 
 		args = toInstances(format(args));
 
-		return createObject(subject, func.apply(createContext(args), toValues(args)));
+		return createObject(subject.prototype, func.apply(createContext(args), toValues(args)));
 	};
 }
