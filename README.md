@@ -25,8 +25,8 @@ const Rider = AutoClass(
 const ShowInfo = AutoClass(
     'ShowInfo',
     Rider,
-    function (rider) {
-        console.log(`${rider.nickname}, #${rider.number}`);
+    function ({nickname, number}) {
+        console.log(`${nickname}, #${number}`);
     }
 );
 
@@ -65,7 +65,7 @@ const MyClass = AutoClass(
 
 ### Type
 
-Three kinds of types can be declared - basic, array, and variadic.
+Three kinds of types can be declared - basic, array and variadic.
 
 ```js
 const MyClass = AutoClass(
@@ -106,9 +106,9 @@ If class requires at least two types (variadic type is not considered), construc
 ```js
 // `ShowInfo` requires `Rider`
 ShowInfo({
-    nickname: 'PoleMan',
-    number: 51
-}); // Logs: "PoleMan, #51"
+    nickname: 'Petrux',
+    number: 9
+}); // Logs: "Petrux, #9"
 ```
 
 ### Values and instances

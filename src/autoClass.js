@@ -1,11 +1,19 @@
-import {
-	addMethod,
-	createSubject,
-	isMethodType,
-	variadicParameterIndex
-} from './';
+import {complement} from 'ramda';
+import addMethod from './addMethod';
+import createSubject from './createSubject';
+import isVectorType from './isVectorType';
 
-export function autoClass(name, paramTypes, func) {
+const variadicParameterIndex = paramTypes => paramTypes.reduce(function (variadicIndex, {isVariadic}, i) {
+	if (isVariadic) {
+		if (variadicIndex !== -1) {
+			throw new TypeError('Only one variadic type is allowed.');
+		}
+		return i;
+	}
+	return variadicIndex;
+}, -1);
+
+export default function (name, paramTypes, func) {
 	const variadicIndex = variadicParameterIndex(paramTypes);
 	const isVariadic = variadicIndex !== -1;
 
@@ -13,7 +21,7 @@ export function autoClass(name, paramTypes, func) {
 
 	if (name) {
 		paramTypes
-			.filter(isMethodType)
+			.filter(complement(isVectorType))
 			.forEach(addMethod(name, variadicIndex, isVariadic, subject, paramTypes));
 	}
 

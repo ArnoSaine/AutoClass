@@ -1,6 +1,8 @@
-import {apply} from './';
+import proxy from './proxy';
 
-export function createObject(prototype, value) {
+const {create, defineProperties, setPrototypeOf} = Object;
+
+export default function (prototype, value) {
 	// `valueOf` property descriptor
 	const valueOf = {
 		value() {
@@ -8,13 +10,13 @@ export function createObject(prototype, value) {
 		}
 	};
 	switch (typeof value) {
-		case 'function': return Object.defineProperties(Object.setPrototypeOf(apply(value), prototype), {
+		case 'function': return defineProperties(setPrototypeOf(proxy(value), prototype), {
 			valueOf,
 			prototype: {
 				value: value.prototype
 			}
 		});
 		case 'undefined': return;
-		default: return Object.create(prototype, {valueOf});
+		default: return create(prototype, {valueOf});
 	}
 }

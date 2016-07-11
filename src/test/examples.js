@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {transform} from 'babel';
+import {transform} from 'babel-core';
 import {readFileSync} from 'fs';
 
 const expectLoggings = [
@@ -7,7 +7,7 @@ const expectLoggings = [
 	'The Maniac, #29',
 	'MyClass',
 	'number',
-	'PoleMan, #51',
+	'Petrux, #9',
 	123,
 	true,
 	true,
@@ -28,14 +28,16 @@ const console = {
 	}
 };
 
-const examples = readFileSync('./README.md')
+const options = JSON.parse(readFileSync('src/.babelrc'));
+
+const examples = readFileSync('README.md')
 	.toString()
 	// find examples
 	.match(/```(js|javascript)[\s\S]*?```/gi)
 	// get code
 	.map(example => example.replace(/^```(js|javascript)/, '').replace(/```$/, ''))
 	// es6 --> es5
-	.map(transform)
+	.map(code => transform(code, options))
 	.map(result => result.code)
 	.join('\n');
 

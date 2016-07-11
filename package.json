@@ -1,6 +1,6 @@
 {
   "name": "autoclass",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Define argument types for functions and automatically add methods to prototype.",
   "keywords": [
     "oop",
@@ -11,25 +11,26 @@
     "name": "Arno Saine",
     "email": "arno@mowhi.com"
   },
-  "main": "lib/main.js",
+  "main": "lib",
   "repository": {
     "type": "git",
     "url": "https://github.com/ArnoSaine/AutoClass.git"
   },
   "scripts": {
-    "compile": "babel -d lib/ src/",
-    "compile-tests": "babel -d test/lib/ test/src/",
-    "dev": "npm run compile && npm run test",
-    "dev-tests": "npm run compile-tests && npm run test",
-    "prepublish": "node emptyDir lib && npm run compile && npm run compile-tests && npm test",
-    "test": "node test/lib"
+    "build": "rimraf lib && babel src --out-dir lib",
+    "dev": "npm run build -- --watch",
+    "prepublish": "npm run build && npm test",
+    "test": "node lib/test"
   },
   "dependencies": {
-    "get-parameter-names": "^0.2.0",
-    "is-plain-object": "^2.0.1"
+    "get-parameter-names": "^0.3.0",
+    "is-plain-object": "^2.0.1",
+    "ramda": "^0.21.0"
   },
   "devDependencies": {
-    "babel": "^5.5.3",
-    "fs-extra": "^0.24.0"
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.10.4",
+    "babel-preset-es2015": "^6.9.0",
+    "rimraf": "^2.5.3"
   }
 }
