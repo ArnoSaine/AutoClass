@@ -4,7 +4,7 @@ Define argument types for functions and automatically add methods to prototype.
 
 ## Installation
 
-```
+```sh
 npm install autoclass
 ```
 

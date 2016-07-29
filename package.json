@@ -1,6 +1,6 @@
 {
   "name": "autoclass",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Define argument types for functions and automatically add methods to prototype.",
   "keywords": [
     "oop",
@@ -17,10 +17,11 @@
     "url": "https://github.com/ArnoSaine/AutoClass.git"
   },
   "scripts": {
-    "build": "rimraf lib && babel src --out-dir lib",
+    "prebuild": "rimraf lib",
+    "build": "babel src --out-dir lib",
     "dev": "npm run build -- --watch",
-    "prepublish": "npm run build && npm test",
-    "test": "node lib/test"
+    "test": "node lib/test",
+    "prepublish": "npm run build && npm test"
   },
   "dependencies": {
     "get-parameter-names": "^0.3.0",
